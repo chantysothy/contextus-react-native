@@ -24,7 +24,7 @@ class PostCreator extends Component {
       url: this.props.post.url,
       title: this.props.post.title,
       content: this.props.post.content,
-      image: '',
+      image: 'http://turbo.paulstamatiou.com/assets/gray-squircles-loader.gif',
       author: this.props.post.author,
       published: false,
       publishedAt: null,
