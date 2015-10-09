@@ -4,6 +4,8 @@
 'use strict';
 
 var React = require('react-native');
+var Parse = require('parse/react-native');
+var ParseReact = require('parse-react/react-native');
 var {
   Component,
   Text,
@@ -21,6 +23,7 @@ class PostCreator extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      id: this.props.post.id,
       url: this.props.post.url,
       title: this.props.post.title,
       content: this.props.post.content,
@@ -43,9 +46,7 @@ class PostCreator extends Component {
      .then((response) => response.text())
      .then((responseText) => {
        var res = JSON.parse(responseText);
-
        //  console.log(res);
-
        // reconstruct image url to crop
        var img = 'http://api.embed.ly/1/display/crop?key=' + CONFIG.EMBEDLY +
        '&url=' + encodeURIComponent(res.images[0]['url']) + '&width=472&height=710';
@@ -61,9 +62,43 @@ class PostCreator extends Component {
        console.warn(error);
      }).done();
   }
-
+  /**
+   * Changes focus state
+   */
   _onFocus() {
     this.setState({isFocused: true});
+  }
+
+  /**
+   * Publishes current item to ParseDB.
+   */
+  _publish(){
+    var now = new Date();
+    var update;
+    if (this.state.id === '') {
+      // New Post!
+      update = ParseReact.Mutation.Create('Posts', {
+        url: this.state.url,
+        content: this.state.content,
+        image: this.state.image,
+        author: this.state.author,
+        published: true,
+        publishedAt: now,
+      });
+    } else {
+      // Update a Post.
+      update = ParseReact.Mutation.Set(this.state.id, {
+        url: this.state.url,
+        content: this.state.content,
+        image: this.state.image,
+        author: this.state.author,
+        published: true,
+        publishedAt: now,
+      });
+    }
+    //
+    update.dispatch();
+
   }
 
   render() {

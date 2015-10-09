@@ -4,6 +4,8 @@
 'use strict';
 
 var React = require('react-native');
+var Parse = require('parse/react-native');
+var ParseReact = require('parse-react/react-native');
 var {
   Component,
   Text,
@@ -15,6 +17,7 @@ var {
   StyleSheet
 } = React;
 var moment = require('moment-twitter');
+
 var ActionSheetIOS = require('ActionSheetIOS');
 var PostCreator = require('./PostCreator');
 var RefreshableListView = require('react-native-refreshable-listview');
@@ -26,13 +29,16 @@ class PostList extends Component {
     this.ds = new ListView.DataSource({
       rowHasChanged: (row1, row2) => row1 !== row2,
     });
+    this._renderRow = this._renderRow.bind(this);
+    this._createPost = this._createPost.bind(this);
+    this._openLink = this._openLink.bind(this);
   }
 
   _getDataSource() {
     return this.ds.cloneWithRows(this.props.posts);
   }
 
-  openLink(rowData) {
+  _openLink(rowData) {
     this.props.navigator.push({
       title: rowData.title,
       component: PostWebView,
@@ -49,6 +55,10 @@ class PostList extends Component {
             isFocused: false,
           },
           rightButtonTitle: 'Done',
+           onRightButtonPress: () => {
+            let update = ParseReact.Mutation.Set(rowData.id, {isPublished: true});
+            update.dispatch();
+           }
         });
       },
     });
@@ -73,7 +83,7 @@ class PostList extends Component {
   _renderRow(rowData) {
     return (
       <TouchableHighlight
-        onPress={() =>this.openLink(rowData)}
+        onPress={() =>this._openLink(rowData)}
         underlayColor='#dddddd'>
         <View>
           <View style={styles.row}>
@@ -91,6 +101,7 @@ class PostList extends Component {
 
   _renderHeader(refreshingIndicator) {
     var blank = {
+      id:'',
       url: '',
       title: '',
       content: '',
