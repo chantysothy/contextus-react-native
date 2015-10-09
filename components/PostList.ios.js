@@ -20,6 +20,7 @@ var moment = require('moment-twitter');
 
 var ActionSheetIOS = require('ActionSheetIOS');
 var PostCreator = require('./PostCreator');
+var PostAftermath = require('./PostAftermath');
 var RefreshableListView = require('react-native-refreshable-listview');
 var PostWebView = require('./PostWebView');
 
@@ -58,6 +59,13 @@ class PostList extends Component {
            onRightButtonPress: () => {
             let update = ParseReact.Mutation.Set(rowData.id, {isPublished: true});
             update.dispatch();
+            this.props.navigator.push({
+              title: 'Published!',
+              component: PostAftermath,
+              passProps: {
+                post: this.state.post
+              }
+            });
            }
         });
       },
@@ -81,12 +89,16 @@ class PostList extends Component {
   }
 
   _renderRow(rowData) {
+    let s = styles.row;
+    if (rowData.isPublished){
+      s = [styles.row, styles.isPublished];
+    }
     return (
       <TouchableHighlight
         onPress={() =>this._openLink(rowData)}
         underlayColor='#dddddd'>
         <View>
-          <View style={styles.row}>
+          <View style={s}>
            <Image style={styles.thumb} source={{uri:rowData.avatar}} />
             <View>
               <Text style={styles.title}>{rowData.title}</Text>
@@ -136,6 +148,7 @@ class PostList extends Component {
           renderRow={this._renderRow.bind(this)}
           loadData={this.props.refresh}
           refreshDescription='Refreshing articles'
+          scrollRenderAheadDistance={300}
         />
     );
   }
@@ -148,6 +161,9 @@ var styles = StyleSheet.create({
   row: {
     padding: 20,
     flexDirection: 'row',
+  },
+  isPublished: {
+    backgroundColor: '#eee'
   },
   title: {
     fontSize: 19,

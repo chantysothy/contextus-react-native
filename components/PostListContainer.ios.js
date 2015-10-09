@@ -26,7 +26,7 @@ class PostListContainer extends ParseComponent {
 
   observe(state) {
     return {
-      posts: new Parse.Query('Posts').descending('shares').limit(25),
+      posts: new Parse.Query('Posts').descending('shares').limit(100),
     };
   }
 
