@@ -17,13 +17,8 @@ var {
 var moment = require('moment-twitter');
 var ActionSheetIOS = require('ActionSheetIOS');
 var PostCreator = require('./PostCreator');
-var RefreshableListView = require('react-native-refreshable-listview')
+var RefreshableListView = require('react-native-refreshable-listview');
 var PostWebView = require('./PostWebView');
-var SafariView = require('react-native-safari-view');
-
-// API_URL = 'beta.shellypalmer.com/wp-json/';
-//
-// LOADING = {};
 
 class PostList extends Component {
   constructor(props) {
@@ -38,30 +33,25 @@ class PostList extends Component {
   }
 
   openLink(rowData) {
-    SafariView.show({
-      url: 'https://github.com/naoufal',
-      readerMode: true,
+    this.props.navigator.push({
+      title: rowData.title,
+      component: PostWebView,
+      passProps: {
+        post: rowData,
+      },
+      rightButtonTitle: 'Publish',
+      onRightButtonPress: () => {
+        this.props.navigator.push({
+          title: 'Publish Post',
+          component: PostCreator,
+          passProps: {
+            post: rowData,
+            isFocused: false,
+          },
+          rightButtonTitle: 'Done',
+        });
+      },
     });
-
-    // this.props.navigator.push({
-    //   title: rowData.title,
-    //   component: PostWebView,
-    //   passProps: {
-    //     post: rowData,
-    //   },
-    //   rightButtonTitle: 'Publish',
-    //   onRightButtonPress: () => {
-    //     this.props.navigator.push({
-    //       title: 'Publish Post',
-    //       component: PostCreator,
-    //       passProps: {
-    //         post: rowData,
-    //         isFocused: false,
-    //       },
-    //       rightButtonTitle: 'Done',
-    //     });
-    //   },
-    // });
   }
 
   _createPost(data) {
@@ -99,7 +89,7 @@ class PostList extends Component {
     );
   }
 
-  _renderHeader() {
+  _renderHeader(refreshingIndicator) {
     var blank = {
       url: '',
       title: '',
@@ -111,26 +101,25 @@ class PostList extends Component {
       publishedAt: null,
     };
     return (
+      <View>
+       {refreshingIndicator}
       <TouchableHighlight
         onPress={() =>this._createPost(blank)}
         underlayColor='#dddddd'>
         <View>
           <View style={styles.row}>
-            <Image style={styles.thumb} source={{uri:blank.avatar}} />
-            <View>
-              <Text style={styles.title}>What's on your mind?</Text>
-              <Text style={styles.author}>You</Text>
-            </View>
+              <Text style={styles.cta}>What's on your mind?</Text>
           </View>
-          <View style={styles.separator}/>
+          <View style={styles.separatorFull}/>
         </View>
       </TouchableHighlight>
+      </View>
     );
   }
 
   render() {
     return (
-      <ListView
+      <RefreshableListView
           dataSource={this._getDataSource()}
           renderHeaderWrapper={this._renderHeader.bind(this)}
           renderRow={this._renderRow.bind(this)}
@@ -178,6 +167,17 @@ var styles = StyleSheet.create({
     flex:1,
     alignSelf: 'flex-end',
   },
+  separatorFull: {
+    height: 1,
+    backgroundColor: '#eeeeee',
+    width: 375,
+    flex:1,
+  },
+  cta: {
+    fontSize: 20,
+    fontWeight: '700',
+  },
+
 
 });
 module.exports =  PostList;
