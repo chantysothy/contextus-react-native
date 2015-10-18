@@ -40,27 +40,27 @@ class PostCreator extends Component {
   }
 
   _fetchData() {
-    var enc = 'http://api.embed.ly/1/extract?key=' + CONFIG.EMBEDLY +
-    '&url=' + encodeURIComponent(this.state.url);
-    fetch(enc)
-     .then((response) => response.text())
-     // .then((responseText) => {
-       // var res = JSON.parse(responseText);
-       //  console.log(res);
-       // reconstruct image url to crop
-       // var img = 'http://api.embed.ly/1/display/crop?key=' + CONFIG.EMBEDLY +
-       // '&url=' + encodeURIComponent(res.images[0]['url']) + '&width=472&height=710';
+    // var enc = 'http://api.embed.ly/1/extract?key=' + CONFIG.EMBEDLY +
+    // '&url=' + encodeURIComponent(this.state.url);
+    // fetch(enc)
+    //  .then((response) => response.text())
+    //  // .then((responseText) => {
+    //    // var res = JSON.parse(responseText);
+    //    //  console.log(res);
+    //    // reconstruct image url to crop
+    //    // var img = 'http://api.embed.ly/1/display/crop?key=' + CONFIG.EMBEDLY +
+    //    // '&url=' + encodeURIComponent(res.images[0]['url']) + '&width=472&height=710';
 
-       this.setState({
-          image: res.images[0]['url'],
-          // content: res.description,
-          // author: res.provider_name,
-          // title: res.title,
-        });
-     })
-     .catch((error) => {
-       console.warn(error);
-     }).done();
+       // this.setState({
+       //    image: res.images[0]['url'],
+       //    // content: res.description,
+       //    // author: res.provider_name,
+       //    // title: res.title,
+       //  });
+     // })
+     // .catch((error) => {
+     //   console.warn(error);
+     // }).done();
   }
   /**
    * Changes focus state
