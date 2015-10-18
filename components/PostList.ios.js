@@ -63,7 +63,7 @@ class PostList extends Component {
               title: 'Published!',
               component: PostAftermath,
               passProps: {
-                post: this.state.post
+                post: rowData
               }
             });
            }

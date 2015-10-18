@@ -44,18 +44,18 @@ class PostCreator extends Component {
     '&url=' + encodeURIComponent(this.state.url);
     fetch(enc)
      .then((response) => response.text())
-     .then((responseText) => {
-       var res = JSON.parse(responseText);
+     // .then((responseText) => {
+       // var res = JSON.parse(responseText);
        //  console.log(res);
        // reconstruct image url to crop
-       var img = 'http://api.embed.ly/1/display/crop?key=' + CONFIG.EMBEDLY +
-       '&url=' + encodeURIComponent(res.images[0]['url']) + '&width=472&height=710';
+       // var img = 'http://api.embed.ly/1/display/crop?key=' + CONFIG.EMBEDLY +
+       // '&url=' + encodeURIComponent(res.images[0]['url']) + '&width=472&height=710';
 
        this.setState({
           image: res.images[0]['url'],
-          content: res.description,
-          author: res.provider_name,
-          title: res.title,
+          // content: res.description,
+          // author: res.provider_name,
+          // title: res.title,
         });
      })
      .catch((error) => {
@@ -104,8 +104,10 @@ class PostCreator extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <FadeInView>
+        <FadeInView delay={0}>
           <Text style={styles.label}>ENTER OR PASTE URL</Text>
+        </FadeInView>
+        <FadeInView delay={1.5}>
           <TextInput
             style={styles.input}
             autoFocus={this.props.isFocused}
@@ -117,6 +119,8 @@ class PostCreator extends Component {
             selectTextOnFocus={'true'}
             onSubmitEditing={this._fetchData.bind(this)}
           />
+        </FadeInView>
+        <FadeInView delay={2.7}>
           <View style={styles.postTop}>
             <Text style={styles.title}>{this.state.title}</Text>
             <Text style={styles.content}>{this.state.content}</Text>

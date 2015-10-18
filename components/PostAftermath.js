@@ -24,7 +24,11 @@ class PostAftermath extends Component {
 
   render() {
   	return (
-  		<Text style={styles.blurb}>Nice! You Published a Post.</Text>
+        <View style={styles.container}>
+         <FadeInView>
+  		      <Text style={styles.blurb}>Nice! You Published a Post.</Text>
+          </FadeInView>
+        </View>
   	);
   }
 }
